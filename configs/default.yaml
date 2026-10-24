@@ -1,0 +1,38 @@
+# Every rule and assumption below was fixed before results were examined.
+raw_dir: data/raw
+out_dir: reports
+publication_date: "2026-10-24"
+
+# Universe: every listed company whose Yahoo business summary describes it as a business development company,
+# minus notes, preferreds and ETNs; a company enters when it has quarterly NAV and prices.
+exclude: [BDCZ, GAINI, MFICL, OFSSO, OXSQH, RWAYI, PSEC-PA, PFLA, FSCO, SSSS, RAND, EQS, FRBP, HTFB, CICB, PIAC, BCIC]
+nav_lag_days: 50          # a quarter's NAV is treated as public 50 days after quarter-end (10-Q deadline is 40-45 days)
+horizon_quarters: 4       # outcome: change in NAV per share over the next four quarters
+pnav_bounds: [0.3, 2.0]   # discard implausible price/NAV readings (data errors)
+buckets: [0.85, 1.00]     # deep discount < 0.85 <= modest discount < 1.00 <= premium
+nav_usd: 1000000000       # illustrative private-credit book for the valuation-governance example
+
+sources:
+  prices.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/stock_prices.parquet
+    sha256: 903dbb965979f8b92a60b01524372f42be0e4bf88c291caf87171a286149be32
+  stock_dividend_events.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/stock_dividend_events.parquet
+    sha256: 08d2a37482501c79c108dd4fefe5f1cd8d64b19ef3d3a316753597c0ddd4ece8
+  stock_split_events.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/stock_split_events.parquet
+    sha256: 3bc56dcfd86d57dcd86fc187ac6bf313e2d4ab8b346a729c910594f61c8976c3
+  stock_statement.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/stock_statement.parquet
+    sha256: bd56ea628309b1a49bf4335f0504c7b6b3608362719686d585434a59db5e32c2
+  stock_profile.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/stock_profile.parquet
+    sha256: 6af13b9c06ce15515a514ee912bff48c943e96c6db6e919d7c668bf46ffda860
+  daily_treasury_yield.parquet:
+    url: https://huggingface.co/datasets/defeatbeta/yahoo-finance-data/resolve/main/data/US/daily_treasury_yield.parquet
+    sha256: 37fca5d22b8580efc93225213d0c4f6d7ef9cf5b183cf7a427cd22b274606171
+# Downloaded 2026-10-20 (prices, dividends, splits, yields) and 2026-10-24 (statements, profiles); ingest.py stops if a file changes.
+# Added after the first run, disclosed in the README: the first run surfaced share-count breaks (reverse splits, pre-listing
+# prices) that produced NAV-per-share jumps of 50-100%; the screen and the lag robustness check were added then.
+robust_lags: [75, 90]     # robustness: treat NAVs as public 75 and 90 days after quarter-end
+max_qoq_nav_jump: 0.25    # a quarter-on-quarter NAV/share move above 25% is treated as a data break
