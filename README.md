@@ -67,7 +67,7 @@ Context and methods referenced
 - Cherkes, M., Sagi, J. and Stanton, R. (2009). "A Liquidity-Based Theory of Closed-End Funds." *The Review of Financial Studies* 22(1), 257–297.
 - US Securities and Exchange Commission (2020). "Good Faith Determinations of Fair Value," Rule 2a-5 under the Investment Company Act, Release No. IC-34128.
 
-All code, charts and text are the author's own.
+Code, analysis, charts and text were produced with AI assistance (Claude, by Anthropic) and reviewed by Gaurav Gupta.
 
 ## Run it
 
